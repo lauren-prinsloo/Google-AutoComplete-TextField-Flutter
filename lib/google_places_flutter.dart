@@ -16,6 +16,8 @@ class GooglePlaceAutoCompleteTextField extends StatefulWidget {
   ItemClick? itmClick;
   GetPlaceDetailswWithLatLng? getPlaceDetailWithLatLng;
   bool isLatLngRequired = true;
+  bool required = false;
+  String? errorMessage = "This field is required";
 
   TextStyle textStyle;
   String googleAPIKey;
@@ -26,13 +28,15 @@ class GooglePlaceAutoCompleteTextField extends StatefulWidget {
   GooglePlaceAutoCompleteTextField(
       {required this.textEditingController,
       required this.googleAPIKey,
-      this.debounceTime: 600,
-      this.inputDecoration: const InputDecoration(),
+      this.debounceTime = 600,
+      this.inputDecoration = const InputDecoration(),
       this.itmClick,
       this.isLatLngRequired=true,
-      this.textStyle: const TextStyle(),
+      this.textStyle = const TextStyle(),
       this.countries,
       this.getPlaceDetailWithLatLng,
+      this.required = false,
+      this.errorMessage = "This field is required"
       });
 
   @override
@@ -59,6 +63,12 @@ class _GooglePlaceAutoCompleteTextFieldState
         style: widget.textStyle,
         controller: widget.textEditingController,
         onChanged: (string) => (subject.add(string)),
+        validator: (value) {
+          if (widget.required && value!.isEmpty) {
+            return widget.errorMessage;
+          }
+          return null;
+        },
       ),
     );
   }
